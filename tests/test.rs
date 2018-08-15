@@ -15,10 +15,11 @@ mod tests {
         y: i32,
     }
 
-    derialize_with_root!("point": Point);
-
     #[test]
-    fn serializes_struct_with_root() {
+    fn deserializes_struct_with_root() {
+
+        deserialize_with_root!("point": Point);
+
         let s = Point {
             x: 0,
             y: 0

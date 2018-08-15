@@ -5,7 +5,7 @@ pub extern crate serde;
 pub extern crate core;
 
 #[macro_export]
-macro_rules! derialize_with_root {
+macro_rules! deserialize_with_root {
     ($root:tt : $inner:ty) => {
         impl<'de> $crate::serde::Deserialize<'de> for $inner {
             fn deserialize<D>(deserializer: D) -> $crate::core::result::Result<Self, D::Error>
@@ -38,7 +38,7 @@ macro_rules! derialize_with_root {
                     type Value = $inner;
 
                     fn expecting(&self, formatter: &mut $crate::core::fmt::Formatter) -> $crate::core::fmt::Result {
-                        formatter.write_str(concat!("wrapper around ", stringify!($inner)))
+                        formatter.write_str(concat!("a wrapper around ", stringify!($inner)))
                     }
 
                     fn visit_map<A>(self, mut map: A) -> $crate::core::result::Result<Self::Value, A::Error>
@@ -68,4 +68,3 @@ macro_rules! derialize_with_root {
         }
     }
 }
-
