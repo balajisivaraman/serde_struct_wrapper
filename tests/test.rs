@@ -14,11 +14,11 @@ mod tests {
         x: i32,
         y: i32,
     }
+    deserialize_with_root!("point": Point);
+    serialize_with_root!("point": Point);
 
     #[test]
     fn deserializes_struct_with_root() {
-        deserialize_with_root!("point": Point);
-
         let s = Point { x: 0, y: 0 };
         assert_de_tokens(
             &s,
@@ -43,9 +43,50 @@ mod tests {
     }
 
     #[test]
-    fn serializes_struct_with_root() {
-        serialize_with_root!("point": Point);
+    fn deserializer_throws_error_on_duplicate_root() {
+        assert_de_tokens_error::<Point>(
+            &[
+                Token::Struct {
+                    name: "Wrapper",
+                    len: 1,
+                },
+                Token::Str("point"),
+                Token::Struct {
+                    name: "Point",
+                    len: 2,
+                },
+                Token::Str("x"),
+                Token::I32(0),
+                Token::Str("y"),
+                Token::I32(0),
+                Token::StructEnd,
+                Token::Str("point"),
+                Token::StructEnd,
+            ],
+            "duplicate field `point`",
+        );
+    }
 
+    #[test]
+    fn deserializer_throws_error_on_missing_root() {
+        assert_de_tokens_error::<Point>(
+            &[
+                Token::Struct {
+                    name: "Wrapper",
+                    len: 2,
+                },
+                Token::Str("x"),
+                Token::I32(0),
+                Token::Str("y"),
+                Token::I32(0),
+                Token::StructEnd,
+            ],
+            "missing field `point`",
+        );
+    }
+
+    #[test]
+    fn serializes_struct_with_root() {
         let s = Point { x: 0, y: 0 };
         assert_ser_tokens(
             &s,
