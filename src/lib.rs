@@ -26,7 +26,10 @@ macro_rules! deserialize_with_root {
                 impl<'de> $crate::serde::de::DeserializeSeed<'de> for WrapperVisitor {
                     type Value = $inner;
 
-                    fn deserialize<D>(self, deserializer: D) -> $crate::core::result::Result<Self::Value, D::Error>
+                    fn deserialize<D>(
+                        self,
+                        deserializer: D,
+                    ) -> $crate::core::result::Result<Self::Value, D::Error>
                     where
                         D: $crate::serde::Deserializer<'de>,
                     {
@@ -37,11 +40,17 @@ macro_rules! deserialize_with_root {
                 impl<'de> $crate::serde::de::Visitor<'de> for WrapperVisitor {
                     type Value = $inner;
 
-                    fn expecting(&self, formatter: &mut $crate::core::fmt::Formatter) -> $crate::core::fmt::Result {
+                    fn expecting(
+                        &self,
+                        formatter: &mut $crate::core::fmt::Formatter,
+                    ) -> $crate::core::fmt::Result {
                         formatter.write_str(concat!("a wrapper around ", stringify!($inner)))
                     }
 
-                    fn visit_map<A>(self, mut map: A) -> $crate::core::result::Result<Self::Value, A::Error>
+                    fn visit_map<A>(
+                        self,
+                        mut map: A,
+                    ) -> $crate::core::result::Result<Self::Value, A::Error>
                     where
                         A: $crate::serde::de::MapAccess<'de>,
                     {
@@ -50,7 +59,9 @@ macro_rules! deserialize_with_root {
                             match key {
                                 RootKey::Root => {
                                     if inner.is_some() {
-                                        return Err($crate::serde::de::Error::duplicate_field($root));
+                                        return Err($crate::serde::de::Error::duplicate_field(
+                                            $root,
+                                        ));
                                     }
                                     inner = Some(map.next_value_seed(WrapperVisitor)?);
                                 }
@@ -66,26 +77,31 @@ macro_rules! deserialize_with_root {
                 deserializer.deserialize_struct("Wrapper", &[$root], WrapperVisitor)
             }
         }
-    }
+    };
 }
 
 #[macro_export]
 macro_rules! serialize_with_root {
     ($root:tt : $inner:ty) => {
         use $crate::core::result::Result;
-        use $crate::serde::ser::{Serialize, Serializer, SerializeStruct};
+        use $crate::serde::ser::{Serialize, SerializeStruct, Serializer};
 
         impl Serialize for $inner {
             fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-            where S: $crate::serde::ser::Serializer,
+            where
+                S: $crate::serde::ser::Serializer,
             {
                 struct Wrapper<'a> {
-                    root: &'a $inner
+                    root: &'a $inner,
                 }
 
-                impl <'a> $crate::serde::Serialize for Wrapper<'a> {
-                    fn serialize<S>(&self, serializer: S) -> $crate::core::result::Result<S::Ok, S::Error>
-                    where S: $crate::serde::Serializer,
+                impl<'a> $crate::serde::Serialize for Wrapper<'a> {
+                    fn serialize<S>(
+                        &self,
+                        serializer: S,
+                    ) -> $crate::core::result::Result<S::Ok, S::Error>
+                    where
+                        S: $crate::serde::Serializer,
                     {
                         <$inner>::serialize(&self.root, serializer)
                     }
@@ -96,5 +112,5 @@ macro_rules! serialize_with_root {
                 state.end()
             }
         }
-    }
+    };
 }
