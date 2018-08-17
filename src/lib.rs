@@ -68,3 +68,33 @@ macro_rules! deserialize_with_root {
         }
     }
 }
+
+#[macro_export]
+macro_rules! serialize_with_root {
+    ($root:tt : $inner:ty) => {
+        use $crate::core::result::Result;
+        use $crate::serde::ser::{Serialize, Serializer, SerializeStruct};
+
+        impl Serialize for $inner {
+            fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+            where S: $crate::serde::ser::Serializer,
+            {
+                struct Wrapper<'a> {
+                    root: &'a $inner
+                }
+
+                impl <'a> $crate::serde::Serialize for Wrapper<'a> {
+                    fn serialize<S>(&self, serializer: S) -> $crate::core::result::Result<S::Ok, S::Error>
+                    where S: $crate::serde::Serializer,
+                    {
+                        <$inner>::serialize(&self.root, serializer)
+                    }
+                }
+
+                let mut state = serializer.serialize_struct("Wrapper", 1)?;
+                state.serialize_field($root, &Wrapper { root: self });
+                state.end()
+            }
+        }
+    }
+}
