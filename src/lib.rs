@@ -114,3 +114,11 @@ macro_rules! serialize_with_root {
         }
     };
 }
+
+#[macro_export]
+macro_rules! serde_with_root {
+    ($root:tt : $inner:ty) => {
+        deserialize_with_root!($root: $inner);
+        serialize_with_root!($root: $inner);
+    };
+}
