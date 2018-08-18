@@ -19,7 +19,7 @@ note the use of the `#[serde(remote = "Self")]` attribute on the
 Struct letting SerDe know of the alernate `Serialize` and
 `Deserialize` implementations provided by the macro.)
 
-```
+```rust
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
 #[serde(remote = "Self")]
 pub struct Point {
