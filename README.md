@@ -20,7 +20,7 @@ Struct letting SerDe know of the alernate `Serialize` and
 `Deserialize` implementations provided by the macro.)
 
 ```rust
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[derive(Serialize, Deserialize, Debug)]
 #[serde(remote = "Self")]
 pub struct Point {
     pub x: i32,
