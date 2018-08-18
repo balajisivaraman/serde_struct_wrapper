@@ -17,6 +17,11 @@
 //! `Deserialize` implementations provided by the macro.)
 //!
 //! ```rust
+//! extern crate serde;
+//! #[macro_use]
+//! extern crate serde_derive;
+//! #[macro_use]
+//! extern crate serde_struct_wrapper;
 //! #[derive(Serialize, Deserialize, Debug)]
 //! #[serde(remote = "Self")]
 //! pub struct Point {
@@ -24,6 +29,7 @@
 //!     pub y: i32,
 //! }
 //! serde_with_root!("point": Point);
+//! # fn main() {}
 //! ```
 //!
 //! The above will let you serialize/deserialize a JSON structure like the
@@ -55,6 +61,11 @@ pub extern crate core;
 /// # Example
 ///
 /// ```rust
+/// extern crate serde;
+/// #[macro_use]
+/// extern crate serde_derive;
+/// #[macro_use]
+/// extern crate serde_struct_wrapper;
 /// #[derive(Deserialize)]
 /// #[serde(remote = "Self")]
 /// pub struct Point {
@@ -62,6 +73,7 @@ pub extern crate core;
 ///     pub y: i32,
 /// }
 /// deserialize_with_root!("point": Point);
+/// # fn main() {}
 /// ```
 ///
 /// The above will deserialize a JSON structure like the following:
@@ -156,6 +168,11 @@ macro_rules! deserialize_with_root {
 /// # Example
 ///
 /// ```rust
+/// extern crate serde;
+/// #[macro_use]
+/// extern crate serde_derive;
+/// #[macro_use]
+/// extern crate serde_struct_wrapper;
 /// #[derive(Serialize)]
 /// #[serde(remote = "Self")]
 /// pub struct Point {
@@ -163,6 +180,7 @@ macro_rules! deserialize_with_root {
 ///     pub y: i32,
 /// }
 /// serialize_with_root!("point": Point);
+/// # fn main() {}
 /// ```
 ///
 /// The above will serialize a JSON structure like the following:
