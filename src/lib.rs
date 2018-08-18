@@ -1,9 +1,79 @@
+//! This crate provides macros that enable wrapping Rust structs with
+//! alternate root keys during serialization and deserialization using
+//! Serde. In principle, it offers a functionality similar to the
+//! `@JsonRootName` annotation for Java's
+//! [Jackson](https://github.com/FasterXML/jackson-annotations/wiki/Jackson-Annotations#serialization-details)
+//! framework.
+//!
+//! Note that this crate is primarily intended to be used in conjunction
+//! with the [`serde_json`](https://crates.io/crates/serde_json) crate. It
+//! has not been tested with other data formats.
+//! ## Usage
+//!
+//! You can use the `serde_with_root!` macro as shown below to both
+//! serialize and deserialize a Struct with an alternate root key. (Please
+//! note the use of the `#[serde(remote = "Self")]` attribute on the
+//! Struct letting SerDe know of the alernate `Serialize` and
+//! `Deserialize` implementations provided by the macro.)
+//!
+//! ```rust
+//! #[derive(Serialize, Deserialize, Debug)]
+//! #[serde(remote = "Self")]
+//! pub struct Point {
+//!     pub x: i32,
+//!     pub y: i32,
+//! }
+//! serde_with_root!("point": Point);
+//! ```
+//!
+//! The above will let you serialize/deserialize a JSON structure like the
+//! following:
+//!
+//! ```json
+//! {
+//!     "point": {
+//!         "x": 1,
+//!         "y": 2
+//!     }
+//! }
+//! ```
+//!
+//! For getting only the `Serializer` implementation, use the
+//! `serialize_with_root!` macro; likewise with the
+//! `deserialize_with_root!` macro for only the `Deserializer`
+//! implementation.
+
 #[doc(hidden)]
 pub extern crate serde;
 
 #[doc(hidden)]
 pub extern crate core;
 
+/// Generates a custom SerDe `Deseralize` implementation that adds an
+/// alternate root key to a Struct during deserialization.
+
+/// # Example
+///
+/// ```rust
+/// #[derive(Deserialize)]
+/// #[serde(remote = "Self")]
+/// pub struct Point {
+///     pub x: i32,
+///     pub y: i32,
+/// }
+/// deserialize_with_root!("point": Point);
+/// ```
+///
+/// The above will deserialize a JSON structure like the following:
+///
+/// ```json
+/// {
+///     "point": {
+///         "x": 1,
+///         "y": 2
+///     }
+/// }
+/// ```
 #[macro_export]
 macro_rules! deserialize_with_root {
     ($root:tt : $inner:ty) => {
@@ -80,6 +150,31 @@ macro_rules! deserialize_with_root {
     };
 }
 
+/// Generates a custom SerDe `Seralize` implementation that adds an
+/// alternate root key to a Struct during serialization.
+
+/// # Example
+///
+/// ```rust
+/// #[derive(Serialize)]
+/// #[serde(remote = "Self")]
+/// pub struct Point {
+///     pub x: i32,
+///     pub y: i32,
+/// }
+/// serialize_with_root!("point": Point);
+/// ```
+///
+/// The above will serialize a JSON structure like the following:
+///
+/// ```json
+/// {
+///     "point": {
+///         "x": 1,
+///         "y": 2
+///     }
+/// }
+/// ```
 #[macro_export]
 macro_rules! serialize_with_root {
     ($root:tt : $inner:ty) => {
@@ -115,6 +210,11 @@ macro_rules! serialize_with_root {
     };
 }
 
+/// Helper macro that will generate both the `Serialize` and
+/// `Deserialize` implementations with an alternate root key.
+
+/// This is the same as manually calling both `deserialize_with_root!`
+/// and `serialize_with_root!`.
 #[macro_export]
 macro_rules! serde_with_root {
     ($root:tt : $inner:ty) => {

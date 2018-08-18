@@ -11,7 +11,7 @@ Note that this crate is primarily intended to be used in conjunction
 with the [`serde_json`](https://crates.io/crates/serde_json) crate. It
 has not been tested with other data formats.
 
-## Example Usage
+## Usage
 
 You can use the `serde_with_root!` macro as shown below to both
 serialize and deserialize a Struct with an alternate root key. (Please
@@ -29,6 +29,18 @@ pub struct Point {
 serde_with_root!("point": Point);
 ```
 
+The above will let you serialize/deserialize a JSON structure like the
+following:
+
+```json
+{
+    "point": {
+        "x": 1,
+        "y": 2
+    }
+}
+```
+
 For getting only the `Serializer` implementation, use the
 `serialize_with_root!` macro; likewise with the
 `deserialize_with_root!` macro for only the `Deserializer`
@@ -38,10 +50,10 @@ implementation.
 
 Serde is licensed under either of
 
- * Apache License, Version 2.0, ([LICENSE-APACHE](LICENSE-APACHE) or
-   http://www.apache.org/licenses/LICENSE-2.0)
- * MIT license ([LICENSE-MIT](LICENSE-MIT) or
-   http://opensource.org/licenses/MIT)
+* Apache License, Version 2.0, ([LICENSE-APACHE](LICENSE-APACHE) or
+http://www.apache.org/licenses/LICENSE-2.0)
+* MIT license ([LICENSE-MIT](LICENSE-MIT) or
+http://opensource.org/licenses/MIT)
 
 at your option.
 
