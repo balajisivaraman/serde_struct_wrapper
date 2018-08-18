@@ -1,10 +1,38 @@
 ## Serde Struct Wrapper
 
-This crate provides macros that enable wrapping Rust structs with alternate root
-keys during serialization and deserialization using Serde. In principle, it
-offers a functionality similar to the `@JsonRoot` annotation for Java's
+This crate provides macros that enable wrapping Rust structs with
+alternate root keys during serialization and deserialization using
+Serde. In principle, it offers a functionality similar to the
+`@JsonRootName` annotation for Java's
 [Jackson](https://github.com/FasterXML/jackson-annotations/wiki/Jackson-Annotations#serialization-details)
 framework.
+
+Note that this crate is primarily intended to be used in conjunction
+with the [`serde_json`](https://crates.io/crates/serde_json) crate. It
+has not been tested with other data formats.
+
+## Example Usage
+
+You can use the `serde_with_root!` macro as shown below to both
+serialize and deserialize a Struct with an alternate root key. (Please
+note the use of the `#[serde(remote = "Self")]` attribute on the
+Struct letting SerDe know of the alernate `Serialize` and
+`Deserialize` implementations provided by the macro.)
+
+```
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[serde(remote = "Self")]
+pub struct Point {
+    pub x: i32,
+    pub y: i32,
+}
+serde_with_root!("point": Point);
+```
+
+For getting only the `Serializer` implementation, use the
+`serialize_with_root!` macro; likewise with the
+`deserialize_with_root!` macro for only the `Deserializer`
+implementation.
 
 ## License
 
