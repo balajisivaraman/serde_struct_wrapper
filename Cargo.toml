@@ -1,7 +1,10 @@
 [package]
 name = "serde_struct_wrapper"
 description = "Wrap Structs with an alternate root element during serialization and deserialization using Serde"
-version = "0.3.0"
+documentation = "https://docs.rs/serde_struct_wrapper/"
+repository = "https://github.com/balajisivaraman/serde_struct_wrapper"
+readme = "README.md"
+version = "0.3.1"
 license = "MIT/Apache-2.0"
 authors = ["Balaji Sivaraman <balaji@balajisivaraman.com>"]
 
