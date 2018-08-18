@@ -4,7 +4,7 @@ description = "Wrap Structs with an alternate root element during serialization 
 documentation = "https://docs.rs/serde_struct_wrapper/"
 repository = "https://github.com/balajisivaraman/serde_struct_wrapper"
 readme = "README.md"
-version = "0.3.1"
+version = "0.3.2"
 license = "MIT/Apache-2.0"
 authors = ["Balaji Sivaraman <balaji@balajisivaraman.com>"]
 

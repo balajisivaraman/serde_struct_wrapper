@@ -8,7 +8,14 @@
 //! Note that this crate is primarily intended to be used in conjunction
 //! with the [`serde_json`](https://crates.io/crates/serde_json) crate. It
 //! has not been tested with other data formats.
+//!
 //! ## Usage
+//!
+//! Add this to your Cargo.toml:
+//!
+//! ```toml
+//! serde_struct_wrapper = "0.3"
+//! ```
 //!
 //! You can use the `serde_with_root!` macro as shown below to both
 //! serialize and deserialize a Struct with an alternate root key. (Please
